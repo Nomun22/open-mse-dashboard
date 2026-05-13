@@ -50,7 +50,7 @@ def t(key: str) -> str:
         "top20_change": {"en": "Change (%)", "mn": "Өөрчлөлт (%)"},
         "top20_value": {"en": "Turnover (MNT M)", "mn": "Эргэлт (сая ₮)"},
         "nav_contact": {"en": "Contact us", "mn": "Холбоо барих"},
-        "nav_support": {"en": "Support", "mn": "Тусламж"},
+        "nav_support": {"en": "Support", "mn": "Дэмжлэг"},
         "nav_lang": {"en": "EN / MN", "mn": "MN / EN"},
         "hero_subtitle": {
             "en": "Live market snapshot for the Mongolian Stock Exchange.",
@@ -562,5 +562,63 @@ with col_disc:
         columns={
             "date": "Date",
             "ticker": t("top20_ticker"),
-    }
+            "title": "Title" if st.session_state["lang"] == "en" else "Гарчиг",
+        }
+    )
+    st.dataframe(df_d, use_container_width=True, hide_index=True, height=250)
+
+with col_meet:
+    st.markdown(f"### {t('meetings_header')}")
+    df_m = meetings.copy()
+    df_m["type"] = df_m["type_en"]
+    if st.session_state["lang"] == "mn":
+        df_m["type"] = df_m["type_mn"]
+    df_m = df_m[["date", "ticker", "type"]].rename(
+        columns={
+            "date": "Date",
+            "ticker": t("top20_ticker"),
+            "type": "Type" if st.session_state["lang"] == "en" else "Төрөл",
+        }
+    )
+    st.dataframe(df_m, use_container_width=True, hide_index=True, height=250)
+
+# -----------------------------
+# MARKET NEWS
+# -----------------------------
+st.markdown(f"### {t('news_header')}")
+
+for item in news_items:
+    title = item["title_en"] if st.session_state["lang"] == "en" else item["title_mn"]
+    summary = (
+        item["summary_en"] if st.session_state["lang"] == "en" else item["summary_mn"]
+    )
+    st.markdown(
+        f"""
+        <div style="
+            background:white;
+            border-radius:10px;
+            padding:12px 16px;
+            margin-bottom:8px;
+            box-shadow:0 1px 4px rgba(0,0,0,0.05);
+        ">
+          <div style="font-size:11px;color:#6b7280;margin-bottom:4px;">{item['date']}</div>
+          <div style="font-size:15px;font-weight:700;color:#004187;margin-bottom:4px;">{title}</div>
+          <div style="font-size:13px;color:#374151;">{summary}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+# -----------------------------
+# FOOTER
+# -----------------------------
+st.markdown("---")
+st.markdown(
+    """
+    <div style="font-size:11px;color:#6b7280;text-align:center;padding:10px 0 20px 0;">
+      Data is illustrative only and structured according to mse.mn and open.mse.mn pages.<br/>
+      Mongolian Stock Exchange · Updated prototype.
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
