@@ -392,8 +392,6 @@ def render_index_chart(col, title_en, title_mn, series, color):
             y=series.values,
             mode="lines",
             line=dict(color=color, width=2),
-            fill="tozeroy",
-            fillcolor=color.replace("#", "rgba(")[:-1] + ",0.08)",
         )
     )
     fig.update_layout(
