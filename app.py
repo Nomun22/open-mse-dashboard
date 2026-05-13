@@ -562,4 +562,5 @@ with col_disc:
         columns={
             "date": "Date",
             "ticker": t("top20_ticker"),
-            
+    }
+)
